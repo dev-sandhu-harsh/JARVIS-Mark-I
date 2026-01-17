@@ -70,7 +70,7 @@ Memory (vector embeddings)
 
 ```bash
 git clone https://github.com/<your-username>/jarvis.git
-cd jarvis
+cd JARVIS-Mark-I
 ```
 (If you forked the repo, use your fork URL.)
 
@@ -90,7 +90,15 @@ pip install --upgrade pip
 pip install typer rich pydantic pydantic-settings python-dotenv
 pip install sentence-transformers faiss-cpu
 pip install ollama
+pip install pyttsx3
 ```
+
+##### Important
+Voice output currently uses pyttsx3 (system TTS).
+This is intentionally chosen to avoid system-level dependencies.
+Neural TTS (Piper / Whisper) is planned in later versions.
+
+
 ### 4. Install Ollama (system dependency)
 
 macOS
@@ -124,23 +132,6 @@ python -m jarvis.main ask "Hello JARVIS"
 ```bash
 python -m jarvis.main ask "My name is Harsh"
 python -m jarvis.main ask "Do you remember my name?"
-```
-
-
-
-## 📂 Project Structure
-```bash
-jarvis/
-├─ core/
-│  ├─ orchestrator.py      # Agent control loop
-│  ├─ ollama_llm.py        # Local LLM adapter
-│  ├─ prompts.py           # System instructions
-│  ├─ tools/               # Whitelisted tools
-│  ├─ memory/              # Vector memory system
-│  └─ json_utils.py        # Safe JSON extraction
-├─ main.py                 # CLI entry point
-├─ model_memory/           # Local memory (gitignored)
-└─ README.md
 ```
 
 
@@ -184,13 +175,13 @@ Semantic memory
 
 CLI interface
 
+Voice Output
+
 ### Planned future marks:
 
-Mark I v2 → Voice (offline STT + TTS)
+Mark I v2 → Background tasks & autonomy
 
-Mark I v3 → Background tasks & autonomy
-
-Mark I v4 → Proactive behavior & scheduling
+Mark I v3 → Proactive behavior & scheduling
 
 
 
