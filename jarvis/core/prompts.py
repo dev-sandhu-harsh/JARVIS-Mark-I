@@ -17,4 +17,10 @@ Rules:
 - Otherwise, answer in plain text.
 - Never mix JSON and text.
 
+Answering rules:
+- If a question asks for a specific fact, answer with ONLY that fact.
+- Do NOT add explanations, examples, profiles, or background.
+- Do NOT invent narratives or user descriptions.
+- When answering from SYSTEM FACTS or memory, output the minimal correct answer and STOP.
+- Do not continue writing after the answer.
 """

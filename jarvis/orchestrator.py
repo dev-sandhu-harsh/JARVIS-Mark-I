@@ -4,8 +4,11 @@ from jarvis.core.ollama_llm import OLLAMA_LLM
 from jarvis.core.tools.registry import TOOLS
 from jarvis.core.tools.schema import ToolCall
 from jarvis.core.json_utils import extract_json
-from jarvis.core.context import list_readable_files
 from jarvis.core.memory.vector import VectorMemory
+from jarvis.core.memory.utils.scoring import memory_importance
+from jarvis.core.memory.utils.proposer import propose_facts
+from jarvis.core.memory.utils.gate import allow_fact
+from jarvis.core.memory.utils.writer import write_facts
 
 class Orchestrator:
     def __init__(self):
@@ -45,7 +48,9 @@ class Orchestrator:
     def run(self, user_input: str):
         context = f"User request:\n{user_input}"
 
+        self.memory.prune()
         memories = self.memory.search(user_input)
+
         if memories:
             context = (
                        "SYSTEM FACTS (always true):\n"
@@ -59,7 +64,6 @@ class Orchestrator:
 
             kind, result = self.route(response)
 
-
             if kind == "tool":
                 context += f"\n Tool result:\n{result}\n"
                 continue
@@ -68,10 +72,13 @@ class Orchestrator:
                 context += f"\nError:\n{result}\n"
                 return result
             
-            # SYSTEM decides memory, not the model
-            if user_input.lower().startswith("my name is"):
-                name = user_input.split()[-1]
-                self.memory.add(f"User name is {name}")
+            candidates = propose_facts(self.llm, user_input)
+            approved = [
+                fact for fact in candidates
+                if allow_fact(fact)
+            ]
+            write_facts(self.memory, approved)
+
             return response
         
         return "Max steps reached."

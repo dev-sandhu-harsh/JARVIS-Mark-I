@@ -10,3 +10,7 @@ class Memory(ABC):
     @abstractmethod
     def search(self, query: str, k: int = 3) -> List[str]:
         pass
+
+    @abstractmethod
+    def prune(self, min_score = 0.2):
+        pass

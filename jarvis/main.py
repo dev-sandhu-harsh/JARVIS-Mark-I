@@ -3,9 +3,11 @@ from rich import print
 from rich.console import Console
 from jarvis.logger import setup_logger
 from jarvis.orchestrator import Orchestrator
+from jarvis.IO.voice.io import VoiceIO
 
 app = typer.Typer()
 console = Console()
+io = VoiceIO()
 orchestrator = Orchestrator()
 
 @app.command()
@@ -17,6 +19,7 @@ def main():
 def ask(message: str, stream: bool = True):
     response = orchestrator.run(message)
     print(response)
+    io.output_text(response)
     # kind, result = orchestrator.route(message)
 
     # if(kind == "tool"):
@@ -30,6 +33,15 @@ def ask(message: str, stream: bool = True):
     # else:
     #     response = orchestrator.handle(message)
     #     print(response)
+
+@app.command()
+def talk():
+    text = io.get_text()
+    if not text:
+        return
+
+    response = orchestrator.run(text)
+    io.output_text(response)
 
 
 if __name__ == "__main__":
